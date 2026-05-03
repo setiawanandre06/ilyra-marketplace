@@ -1,0 +1,26 @@
+# Virtual Environment
+.venv/
+venv/
+
+# Environment variables — JANGAN pernah di-commit!
+.env
+.env.local
+
+# Django
+db.sqlite3
+*.pyc
+__pycache__/
+staticfiles/
+media/
+
+# IDE & Editor
+.vscode/
+.idea/
+*.swp
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
