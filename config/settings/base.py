@@ -23,6 +23,7 @@ THIRD_PARTY_APPS = [
 ]
 
 LOCAL_APPS = [
+    "apps.vendors",
     "apps.products",
     "apps.monitors",
     "apps.exporters",
