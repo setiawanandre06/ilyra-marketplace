@@ -29,3 +29,8 @@ class VendorStoreAdmin(ModelAdmin):
             "fields": ("created_at", "updated_at"),
         }),
     )
+
+    def save_model(self, request, obj, form, change):
+        if not obj.pk:
+            obj.owner = request.user
+        super().save_model(request, obj, form, change)
