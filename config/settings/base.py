@@ -125,6 +125,17 @@ UNFOLD = {
                     },
                 ],
             },
+            {
+                "title": "Monitor",
+                "separator": True,
+                "items": [
+                    {
+                        "title": "Riwayat Harga",
+                        "icon": "history",
+                        "link": "/admin/monitors/pricehistory/",
+                    },
+                ],
+            },
         ],
     },
     "COLORS": {
