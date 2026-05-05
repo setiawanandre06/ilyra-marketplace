@@ -20,3 +20,21 @@ class VendorProductAdmin(ModelAdmin):
     search_fields = ["name", "item_id"]
     list_editable = ["priority", "is_active"]
     inlines = [ProductVariantInline]
+
+    readonly_fields = ["last_checked", "created_at", "updated_at"]
+
+    fieldsets = (
+        ("Informasi Produk", {
+            "fields": ("store", "name", "item_id", "product_url"),
+        }),
+        ("Deskripsi", {
+            "fields": ("description",),
+        }),
+        ("Pengaturan Monitor", {
+            "fields": ("priority", "is_active"),
+        }),
+        ("Informasi Sistem", {
+            "classes": ("collapse",),
+            "fields": ("last_checked", "created_at", "updated_at"),
+        }),
+    )
