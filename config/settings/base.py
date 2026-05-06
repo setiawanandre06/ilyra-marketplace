@@ -6,7 +6,7 @@ SECRET_KEY = NotImplemented  # Di-override di development.py & production.py
 
 DEBUG = False  # Default aman, di-override di development.py
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["localhost", "127.0.0.1", "0.0.0.0", "192.168.1.4"]
 
 # Aplikasi yang aktif
 DJANGO_APPS = [

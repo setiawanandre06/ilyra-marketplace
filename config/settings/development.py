@@ -5,9 +5,8 @@ SECRET_KEY = config("SECRET_KEY")
 
 DEBUG = config("DEBUG", default=False, cast=bool)
 
-ALLOWED_HOSTS = ["localhost", "127.0.0.1"]
+ALLOWED_HOSTS = ["localhost", "127.0.0.1", "0.0.0.0", "192.168.1.4"]
 
-# Sementara pakai SQLite dulu, nanti ganti PostgreSQL
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
@@ -18,3 +17,6 @@ DATABASES = {
         "PORT": config("DB_PORT", default="5432"),
     }
 }
+
+# Redis & Celery
+CELERY_BROKER_URL = config("REDIS_URL", default="redis://localhost:6379/0")
