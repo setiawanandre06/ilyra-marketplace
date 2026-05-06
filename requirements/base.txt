@@ -4,4 +4,6 @@ sqlparse==0.5.5
 tzdata==2026.2
 python-decouple==3.8
 psycopg2-binary==2.9.12
-unfold==0.92.0
+django-unfold==0.92.0
+celery==5.4.0
+redis==5.2.1
