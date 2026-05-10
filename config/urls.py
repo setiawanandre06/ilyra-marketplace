@@ -16,7 +16,9 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from apps.marketplaces.views import calculator_view
 
 urlpatterns = [
+    path('admin/kalkulator/', calculator_view, name='kalkulator'),
     path('admin/', admin.site.urls),
 ]
