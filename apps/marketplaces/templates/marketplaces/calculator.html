@@ -1,0 +1,124 @@
+{% extends "admin/base_site.html" %}
+
+{% block title %}Kalkulator Harga & Keuntungan | Ilyra Marketplace{% endblock %}
+
+{% block content %}
+<div class="flex flex-col gap-6 w-full max-w-4xl mx-auto mt-6 bg-white dark:bg-gray-800 p-6 rounded-lg shadow">
+    <h2 class="text-2xl font-bold mb-4 text-gray-800 dark:text-gray-100">Kalkulator Harga & Keuntungan</h2>
+    
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <!-- Form Input -->
+        <div class="flex flex-col gap-4 border-r dark:border-gray-700 pr-0 md:pr-6">
+            <div>
+                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Harga Shopee (Rp)</label>
+                <input type="number" id="harga_shopee" class="w-full px-3 py-2 border rounded-md shadow-sm focus:ring focus:ring-opacity-50 dark:bg-gray-700 dark:border-gray-600 dark:text-white" placeholder="Contoh: 26899">
+            </div>
+            
+            <div>
+                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Persentase Cuan (%)</label>
+                <input type="number" id="persentase_cuan" class="w-full px-3 py-2 border rounded-md shadow-sm focus:ring focus:ring-opacity-50 dark:bg-gray-700 dark:border-gray-600 dark:text-white" placeholder="Contoh: 20" value="20">
+            </div>
+            
+            <div>
+                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Biaya Admin / Gratis Ongkir (%)</label>
+                <input type="number" id="biaya_admin" class="w-full px-3 py-2 border rounded-md shadow-sm focus:ring focus:ring-opacity-50 dark:bg-gray-700 dark:border-gray-600 dark:text-white" placeholder="Contoh: 10" value="10">
+            </div>
+            
+            <button id="btn_hitung" class="mt-4 px-4 py-2 bg-blue-600 text-white font-medium rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 transition-colors">
+                Hitung Sekarang
+            </button>
+        </div>
+        
+        <!-- Hasil -->
+        <div class="flex flex-col gap-4">
+            <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-100 border-b pb-2 dark:border-gray-700">Hasil Perhitungan</h3>
+            
+            <div class="bg-gray-50 dark:bg-gray-700 p-4 rounded-md">
+                <p class="text-sm text-gray-500 dark:text-gray-400">Harga Pokok Penjualan (HPP)</p>
+                <p class="text-xl font-bold text-gray-900 dark:text-white" id="hasil_hpp">Rp 0</p>
+                <p class="text-xs text-gray-400 mt-1">Rumus: (Harga Shopee - 10%) - 1250</p>
+            </div>
+            
+            <div class="bg-blue-50 dark:bg-blue-900/30 p-4 rounded-md">
+                <p class="text-sm text-blue-600 dark:text-blue-400">Harga Jual Rekomendasi</p>
+                <p class="text-xl font-bold text-blue-700 dark:text-blue-300" id="hasil_harga_jual">Rp 0</p>
+                <p class="text-xs text-blue-400/80 mt-1">Rumus: (HPP + Persentase Cuan) + 1250</p>
+            </div>
+            
+            <div class="bg-green-50 dark:bg-green-900/30 p-4 rounded-md">
+                <p class="text-sm text-green-600 dark:text-green-400">Cuan Real / Keuntungan Bersih</p>
+                <p class="text-2xl font-bold text-green-700 dark:text-green-300" id="hasil_cuan_real">Rp 0</p>
+                <p class="text-xs text-green-500/80 mt-1">Rumus: (Harga Jual - Biaya Admin) - 1250 - HPP</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const btnHitung = document.getElementById('btn_hitung');
+    const inputHargaShopee = document.getElementById('harga_shopee');
+    const inputPersenCuan = document.getElementById('persentase_cuan');
+    const inputBiayaAdmin = document.getElementById('biaya_admin');
+    
+    const hasilHpp = document.getElementById('hasil_hpp');
+    const hasilHargaJual = document.getElementById('hasil_harga_jual');
+    const hasilCuanReal = document.getElementById('hasil_cuan_real');
+
+    function formatRupiah(angka) {
+        return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(angka);
+    }
+
+    function hitung() {
+        const hargaShopee = parseFloat(inputHargaShopee.value) || 0;
+        const persenCuan = parseFloat(inputPersenCuan.value) || 0;
+        const biayaAdmin = parseFloat(inputBiayaAdmin.value) || 0;
+        
+        if (hargaShopee === 0) return;
+
+        // 1. Hitung HPP
+        // HPP = (Harga shopee - 10%) - 1250
+        const potongShopee = hargaShopee * 0.10;
+        const hpp = (hargaShopee - potongShopee) - 1250;
+
+        // 2. Hitung Harga Jual
+        // Harga Jual = (HPP + (persentase cuan)) + 1250
+        const marginCuan = hpp * (persenCuan / 100);
+        let hargaJual = hpp + marginCuan + 1250;
+        
+        // Pembulatan ke atas ke ratusan terdekat untuk harga jual (opsional tapi biasa dilakukan)
+        // hargaJual = Math.ceil(hargaJual / 100) * 100;
+        
+        // 3. Hitung Cuan Real
+        // Cuan Real = (Harga Jual - (persentase biaya admin atau gratis ongkir) - 1250) - HPP
+        const potongAdmin = hargaJual * (biayaAdmin / 100);
+        const cuanReal = (hargaJual - potongAdmin - 1250) - hpp;
+
+        // Update UI
+        hasilHpp.innerText = formatRupiah(hpp);
+        hasilHargaJual.innerText = formatRupiah(hargaJual);
+        
+        if (cuanReal < 0) {
+            hasilCuanReal.innerText = formatRupiah(cuanReal);
+            hasilCuanReal.classList.remove('text-green-700', 'dark:text-green-300');
+            hasilCuanReal.classList.add('text-red-600', 'dark:text-red-400');
+        } else {
+            hasilCuanReal.innerText = formatRupiah(cuanReal);
+            hasilCuanReal.classList.remove('text-red-600', 'dark:text-red-400');
+            hasilCuanReal.classList.add('text-green-700', 'dark:text-green-300');
+        }
+    }
+
+    btnHitung.addEventListener('click', hitung);
+    
+    // Auto hitung saat enter ditekan
+    [inputHargaShopee, inputPersenCuan, inputBiayaAdmin].forEach(input => {
+        input.addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') {
+                hitung();
+            }
+        });
+    });
+});
+</script>
+{% endblock %}
