@@ -32,6 +32,7 @@ LOCAL_APPS = [
     "apps.monitors",
     "apps.exporters",
     "apps.notifications",
+    "apps.marketplaces",
 ]
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
@@ -133,6 +134,17 @@ UNFOLD = {
                         "title": "Riwayat Harga",
                         "icon": "history",
                         "link": "/admin/monitors/pricehistory/",
+                    },
+                ],
+            },
+            {
+                "title": "Alat & Utilitas",
+                "separator": True,
+                "items": [
+                    {
+                        "title": "Kalkulator Harga",
+                        "icon": "calculate",
+                        "link": "/admin/kalkulator/",
                     },
                 ],
             },
